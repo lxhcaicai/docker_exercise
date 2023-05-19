@@ -28,4 +28,5 @@ CMD echo $MYPATHc
 
 CMD echo "success---------ok"
 
-CMD /bin/bash
+# 让容器不会自动退出
+CMD tail -f /dev/null
