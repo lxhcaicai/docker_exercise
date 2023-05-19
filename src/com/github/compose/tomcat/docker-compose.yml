@@ -1,0 +1,18 @@
+services:
+  my-tomcat:
+    image: my-tomcat
+    container_name: my-tomcat
+    ports:
+      - ${TOMCAT_PORT:-8080}:8080
+    restart: always
+    shm_size: 256m # 限制大小
+    networks:
+      my-network:
+        ipv4_address: ${TOMCAT_HOST:-172.20.0.2}
+
+networks: # 配置网卡
+  my-network: # 网卡名称
+    driver: bridge # 网卡驱动
+    ipam:
+      config:
+        - subnet: ${SUBNET:-172.20.0.0/16} # 配置子网
