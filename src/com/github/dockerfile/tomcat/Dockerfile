@@ -39,5 +39,5 @@ ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin
 
 EXPOSE 8080
 
-CMD $WORK_DIR/bin/startup.sh run
+CMD $WORK_DIR/bin/catalina.sh run
 
