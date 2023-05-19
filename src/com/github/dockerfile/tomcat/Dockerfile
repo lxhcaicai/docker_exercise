@@ -20,10 +20,6 @@ ENV JAVA_HOME=/usr/local/java/$JDK_HOME/
 
 ENV JRE_HOME $JAVA_HOME/jre
 
-ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH
-
-ENV PATH $JAVA_HOME/bin:$PATH
-
 ### tomcat 安装
 
 ENV WORK_DIR /usr/local/tomcat
@@ -36,7 +32,12 @@ RUN chmod 755 $WORK_DIR/bin/startup.sh
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
+ENV CATALINA_HOME /usr/local/tomcat
+ENV CATALINA_BASE /usr/local/tomcat
+ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin
+
 EXPOSE 8080
 
-CMD $WORK_DIR/bin/catalina.sh run
+CMD $WORK_DIR/bin/startup.sh run
 
