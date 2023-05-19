@@ -1,0 +1,5 @@
+services:
+  my-jdk8:
+    image: my-jdk8
+    container_name: my-jdk8
+    restart: always
