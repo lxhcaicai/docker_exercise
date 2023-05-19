@@ -1,0 +1,20 @@
+services:
+  my-webapp:
+    image: my-tomcat
+    container_name: my-webapp
+    volumes:
+      - ${WEB_DATA_DIRECTORY}/webapp/${WEB_APP_NAME}:/usr/local/tomcat/webapps/${WEB_APP_NAME}
+      - ${WEB_DATA_DIRECTORY}/logs:/usr/local/tomcat/logs
+    ports:
+      - ${WEB_PORT:-8080}:8080
+    restart: always
+    networks:
+      my-network:
+        ipv4_address: ${WEB_HOST:-172.30.0.3}
+
+networks: # 配置网卡
+  my-network: # 网卡名称
+    driver: bridge # 网卡驱动
+    ipam:
+      config:
+        - subnet: ${SUBNET:-172.30.0.0/16} # 配置子网
