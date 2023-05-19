@@ -1,10 +1,15 @@
 # Default ignored files
 /shelf/
-/workspace.xml
+/.idea/workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+.idea
 
 jdk-8u131-linux-x64.tar.gz
+
+apache-tomcat-8.5.88.tar.gz
+
+apache-tomcat-8.5.88/
