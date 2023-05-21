@@ -1,0 +1,92 @@
+networks:     #网络配置
+  redis-sentinel-1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET:-172.30.0.0/16} # 配置子网
+
+
+services:
+  redis-master:
+    image: redis:6.0.16
+    container_name: redis-master
+    ports:
+      - 6379:6379
+    networks:
+      redis-sentinel-1:
+         ipv4_address: ${REDIS_MASTER_HOST:-172.30.0.2}
+
+  redis-slave-1:
+    image: redis:6.0.16
+    container_name: redis-slave-1
+    ports:
+      - 6380:6379
+    command: bash -c "redis-server --slaveof ${REDIS_MASTER_HOST:-172.30.0.2} 6379"
+    depends_on:
+      - redis-master
+    networks:
+      redis-sentinel-1:
+        ipv4_address: ${REDIS_SLAVE_1_HOST:-172.30.0.3}
+
+  redis-slave-2:
+    image: redis:6.0.16
+    container_name: redis-slave-2
+    ports:
+      - 6381:6379
+    command: bash -c "redis-server --slaveof ${REDIS_MASTER_HOST:-172.30.0.2} 6379"
+    depends_on:
+      - redis-master
+    networks:
+      redis-sentinel-1:
+        ipv4_address: ${REDIS_SLAVE_2_HOST:-172.30.0.4}
+
+  redis-sentinel-1:
+    image: redis:6.0.16
+    container_name: redis-sentinel-1
+    ports:
+      - 26379:26379
+    volumes:
+      - ${REDIS_DIR}/redis/sentinel_node/redis_sentinel_1/data:/data
+      - ${REDIS_DIR}/redis/sentinel_node/redis_sentinel_1/sentinel.conf:/etc/sentinel.conf
+    command: bash -c "redis-sentinel /etc/sentinel.conf && chmod 777 /etc/sentinel.conf"
+    depends_on:
+      - redis-master
+      - redis-slave-1
+      - redis-slave-2
+    networks:
+      redis-sentinel-1:
+        ipv4_address: ${REDIS_SENTINEL_1_HOST:-172.30.0.5}
+
+  redis-sentinel-2:
+    image: redis:6.0.16
+    container_name: redis-sentinel-2
+    ports:
+      - 26380:26379
+    volumes:
+      - ${REDIS_DIR}/redis/sentinel_node/redis_sentinel_2/data:/data
+      - ${REDIS_DIR}/redis/sentinel_node/redis_sentinel_2/sentinel.conf:/etc/sentinel.conf
+    command: bash -c "redis-sentinel /etc/sentinel.conf && chmod 777 /etc/sentinel.conf"
+    depends_on:
+      - redis-master
+      - redis-slave-1
+      - redis-slave-2
+    networks:
+      redis-sentinel-1:
+        ipv4_address: ${REDIS_SENTINEL_2_HOST:-172.30.0.6}
+
+  redis-sentinel-3:
+    image: redis:6.0.16
+    container_name: redis-sentinel-3
+    ports:
+      - 26381:26379
+    volumes:
+      - ${REDIS_DIR}/redis/sentinel_node/redis_sentinel_3/data:/data
+      - ${REDIS_DIR}/redis/sentinel_node/redis_sentinel_3/sentinel.conf:/etc/sentinel.conf
+    command: bash -c "redis-sentinel /etc/sentinel.conf && chmod 777 /etc/sentinel.conf"
+    depends_on:
+      - redis-master
+      - redis-slave-1
+      - redis-slave-2
+    networks:
+      redis-sentinel-1:
+        ipv4_address: ${REDIS_SENTINEL_2_HOST:-172.30.0.7}

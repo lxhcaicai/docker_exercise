@@ -13,3 +13,5 @@ jdk-8u131-linux-x64.tar.gz
 apache-tomcat-8.5.88.tar.gz
 
 apache-tomcat-8.5.88/
+
+*.log
