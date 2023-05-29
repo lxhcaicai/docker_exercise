@@ -1,0 +1,16 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-test
+  namespace: default
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate: # job 控制器模板，用于为 cronjob 控制器生成 job 对象，下面其实就是 job 的定义
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args: ['/bin/sh', '-c', 'date; echo Hello from the Kubernetes cluster']
+          restartPolicy: Never
