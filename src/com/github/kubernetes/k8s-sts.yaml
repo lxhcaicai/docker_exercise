@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stateful-nginx
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: ss-nginx
+  serviceName: nginx-svc # 服务名称，这个字段需要和 service 的 metadata.name 相同
+  replicas: 3 # 副本数
+  template:
+    metadata:
+      labels:
+        app: ss-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.20.2
+---
+# 将 StatefulSet 加入网络
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: default
+spec:
+  selector:
+    app: ss-nginx
+  type: ClusterIP
+  clusterIP: None # 不分配 ClusterIP ，形成无头服务，整个集群的 Pod 能直接访问，但是浏览器不可以访问。
+  ports:
+    - name: nginx
+      protocol: TCP
+      port: 80
+      targetPort: 80
