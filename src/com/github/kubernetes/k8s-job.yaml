@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-01
+  labels:
+    app: job-01
+spec:
+  # backoffLimit: 6 # 指定 Job 失败后进行重试的次数，默认为 6 ；换言之，Job 失败 6 次后，就认为失败。
+  # activeDeadlineSeconds: 30 # 指定 Job 可以运行的时间期限，超过时间还没结束，系统将会尝试进行终止。
+  completions: 4 # 指定 Job 需要成功运行 Pod 的总次数，默认为 1
+  template: # Pod 模板
+    metadata:
+      name: pod-job-test
+      labels:
+        app: job-01
+    spec:
+      containers:
+        - name: alpine
+          image: alpine # 坑：所有的 Job 类型的 Pod 不需要阻塞式镜像，如：nginx 等。Job 类型的 Pod 需要运行完成后就停止的镜像，如：alpine、busybox 等。
+          command: ["/bin/sh","-c","for i in 9 8 7 6 5 4 3 2 1;do echo $i;done"]
+      restartPolicy: Never
