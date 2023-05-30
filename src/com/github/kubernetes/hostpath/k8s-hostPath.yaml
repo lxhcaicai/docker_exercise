@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-host-path
+  namespace: default
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.20.2
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 200Mi
+      ports:
+        - containerPort:  80
+          name:  http
+      volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+  volumes:
+    - name: localtime
+      hostPath: # hostPath
+        path: /usr/share/zoneinfo/Asia/Shanghai
+  restartPolicy: Always
