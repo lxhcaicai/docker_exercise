@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+spec: {}
+status: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pood
+  namespace: demo
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+
+      ports:
+        - containerPort: 80
+          name: http
+      volumeMounts:
+        - mountPath: /etc/localtime
+          name: localtime
+  volumes:
+    - name: localtime
+      hostPath:
+        path: /usr/share/zoneinfo/Asia/Shanghai
+  restartPolicy: Always
+
